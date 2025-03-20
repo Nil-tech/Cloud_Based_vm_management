@@ -59,3 +59,8 @@ Open your browser and go to http://127.0.0.1:5000.
 
 
 
+## Demo
+[![Watch the video](https://raw.githubusercontent.com/Nil-tech/Cloud_Based_vm_management/main/cloud_based_vm_management_thumbnail.jpg)](https://raw.githubusercontent.com/Nil-tech/Cloud_Based_vm_management/main/cloud_based_vm_management_demo_video.mp4)
+
+
+
