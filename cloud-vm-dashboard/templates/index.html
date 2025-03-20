@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud VM Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        button { padding: 5px 10px; margin: 2px; }
+    </style>
+</head>
+<body>
+    <h1>Cloud VM Dashboard</h1>
+    <table id="instances-table">
+        <thead>
+            <tr>
+                <th>Instance ID</th>
+                <th>Instance Type</th>
+                <th>State</th>
+                <th>Public IP</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be populated by JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchInstances() {
+            const response = await fetch('/instances');
+            const instances = await response.json();
+            const tableBody = document.querySelector('#instances-table tbody');
+            tableBody.innerHTML = '';
+            instances.forEach(instance => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${instance.InstanceId}</td>
+                    <td>${instance.InstanceType}</td>
+                    <td>${instance.State}</td>
+                    <td>${instance.PublicIpAddress}</td>
+                    <td>
+                        <button onclick="manageInstance('${instance.InstanceId}', 'start')">Start</button>
+                        <button onclick="manageInstance('${instance.InstanceId}', 'stop')">Stop</button>
+                        <button onclick="manageInstance('${instance.InstanceId}', 'reboot')">Reboot</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        async function manageInstance(instanceId, action) {
+            await fetch('/manage_instance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ instance_id: instanceId, action: action })
+            });
+            fetchInstances(); // Refresh the table
+        }
+
+        // Fetch instances every 5 seconds
+        setInterval(fetchInstances, 5000);
+        fetchInstances(); // Initial fetch
+    </script>
+</body>
+</html>
